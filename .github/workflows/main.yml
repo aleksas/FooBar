@@ -1,0 +1,30 @@
+name: Win32Sample GitHub Release
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  create_release:
+    name: Create GitHub Release
+    runs-on: windows-2019
+    steps:
+      - name: Install 7Zip PowerShell Module
+        shell: powershell
+        run: Install-Module 7Zip4PowerShell -Force -Verbose
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+      - uses: lukka/get-cmake@latest
+      - name: Restore from cache and run vcpkg
+        uses: lukka/run-vcpkg@v3
+        with:
+          vcpkgArguments: '@${{ github.workspace }}/build/vcpkg.txt'
+          vcpkgTriplet: 'x86-windows'
+          vcpkgDirectory: '${{ runner.workspace }}/vcpkg'
+          vcpkgGitCommitId: '8a9a97315aefb3f8bc5d81bf66ca0025938b9c91'
+          appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
+      - name: Build Binary
+        shell: cmd
+        run: call .\build\build.cmd
