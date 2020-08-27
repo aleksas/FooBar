@@ -24,9 +24,9 @@ jobs:
           vcpkgTriplet: 'x86-windows'
           vcpkgDirectory: '${{ runner.workspace }}/vcpkg'
           vcpkgGitCommitId: '8a9a97315aefb3f8bc5d81bf66ca0025938b9c91'
-      - name: Build Binary
+      - name: Integrate installed VCPKG packages
         shell: cmd
-        run: call "${{ runner.workspace }}/vcpkg/vcpkg integrate install"
+        run: call "${{ runner.workspace }}/vcpkg/vcpkg" integrate install
       - name: Build Binary
         shell: cmd
         run: call .\build\build.cmd
